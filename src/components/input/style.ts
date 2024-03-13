@@ -27,9 +27,14 @@ export const Container = styled.div<ContainerProps>`
     font-size: 1rem;
     width: 100%;
     border: 1px solid transparent;
+    transition: all 100ms;
 
     &:focus {
       border-color: ${theme.color.primary};
+    }
+
+    &::placeholder {
+      color: ${theme.color.neutral};
     }
   }
 `
