@@ -2,10 +2,11 @@ import { InputMask } from "@react-input/mask"
 
 import { Button } from "../components/button"
 import { ButtonICon } from "../components/button-icon"
+import { Card } from "../components/card"
 import { Input } from "../components/input"
 import { Logo } from "../components/Logo"
 import { Titile } from "../components/title"
-import { Filters, Header, InputGroup, Main, Section } from "./style"
+import { Balance, Filters, Header, InputGroup, Main, Section } from "./style"
 
 export function Home() {
   return (
@@ -41,6 +42,11 @@ export function Home() {
               <ButtonICon />
             </InputGroup>
           </Filters>
+          <Balance>
+            <Card title="Saldo" amount={1000000} />
+            <Card title="Saldo" amount={1000000} variant="incomes" />
+            <Card title="Saldo" amount={1000000} variant="expenses" />
+          </Balance>
         </Section>
       </Main>
     </>
