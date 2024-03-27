@@ -1,6 +1,6 @@
-import { createGlobalStyle } from 'styled-components'
+import { createGlobalStyle } from "styled-components"
 
-import { theme } from './themes'
+import { theme } from "./themes"
 
 export default createGlobalStyle`
 *{
