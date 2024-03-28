@@ -1,9 +1,10 @@
 import { InputMask } from "@react-input/mask"
 
-import { Button } from "../components/button"
 import { ButtonICon } from "../components/button-icon"
 import { Card } from "../components/card"
+import { CategoriesPieChart } from "../components/categories-pie-chart"
 import { CreateCategoryDialog } from "../components/create-category-dialog"
+import { CreateTransactionDialog } from "../components/create-transaction-dialog"
 import { Input } from "../components/input"
 import { Logo } from "../components/Logo"
 import { Titile } from "../components/title"
@@ -30,7 +31,7 @@ export function Home() {
         <Logo />
         <div>
           <CreateCategoryDialog />
-          <Button>Nova Categoria</Button>
+          <CreateTransactionDialog />
         </div>
       </Header>
       <Main>
@@ -69,7 +70,9 @@ export function Home() {
                 subtitle="Despesas por categoria no período"
               />
             </header>
-            <ChartContent></ChartContent>
+            <ChartContent>
+              <CategoriesPieChart />
+            </ChartContent>
           </ChartContainer>
           <ChartContainer>
             <header>
