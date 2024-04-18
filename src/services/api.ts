@@ -14,7 +14,7 @@ export class APIservice {
       "/categories",
       createCategoryData
     )
-
+    console.log(data)
     return data
   }
 

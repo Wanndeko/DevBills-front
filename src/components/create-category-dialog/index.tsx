@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useCallback, useState } from "react"
 import { useForm } from "react-hook-form"
 
+import { useFetchAPI } from "../../hooks/useFetchAPI"
 import { theme } from "../../styles/themes"
 import { createCategorySchema } from "../../validators/schema"
 import { CreateCategoryData } from "../../validators/types"
@@ -10,10 +11,9 @@ import { Dialog } from "../dialog"
 import { Input } from "../input"
 import { Titile } from "../title"
 import { Container } from "./style"
-import { useFetchAPI } from "../../hooks/useFetchAPI"
 
 export function CreateCategoryDialog() {
-  const { createCategory } = useFetchAPI()
+  const { createCategory, fetchCategories } = useFetchAPI()
   const [open, setOpen] = useState(false)
   const { register, handleSubmit, formState } = useForm<CreateCategoryData>({
     defaultValues: {
@@ -31,8 +31,9 @@ export function CreateCategoryDialog() {
     async (data: CreateCategoryData) => {
       await createCategory(data)
       handleClose()
+      await fetchCategories()
     },
-    [handleClose, createCategory]
+    [handleClose, createCategory, fetchCategories]
   )
 
   return (
@@ -49,19 +50,23 @@ export function CreateCategoryDialog() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div>
             <Input
-              {...register("title")}
               label="Nome"
               placeholder="Nome da categoria..."
+              {...register("title")}
+              onError={formState.errors?.title?.message}
             />
-            <Input {...register("color")} label="Cor" type="color" />
+            <Input
+              label="Cor"
+              type="color"
+              {...register("color")}
+              onError={formState.errors?.color?.message}
+            />
           </div>
           <footer>
             <Button onClick={handleClose} variant="outline" type="button">
               Cancelar
             </Button>
-            <Button onClick={onSubmit} type="button">
-              Cadastrar
-            </Button>
+            <Button type="submit">Cadastrar</Button>
           </footer>
         </form>
       </Container>
