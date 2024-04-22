@@ -21,7 +21,7 @@ import {
 } from "./style"
 
 export function CreateTransactionDialog() {
-  const { categories, fetchCategories } = useFetchAPI()
+  const { categories, fetchCategories, createTransaction } = useFetchAPI()
   const [open, setOpen] = useState(false)
   const {
     register,
@@ -48,9 +48,13 @@ export function CreateTransactionDialog() {
     setOpen(false)
   }, [reset])
 
-  const onSubmit = useCallback(() => {
-    handleClose()
-  }, [handleClose])
+  const onSubmit = useCallback(
+    async (data: CreateTransactionData) => {
+      await createTransaction(data)
+      handleClose()
+    },
+    [handleClose, createTransaction]
+  )
 
   return (
     <Dialog
@@ -128,7 +132,7 @@ export function CreateTransactionDialog() {
               />
               <label htmlFor="expense">Gasto</label>
             </RadioGroup>
-            {errors.type && (<ErrorMessage>{errors.type.message}</ErrorMessage>)}
+            {errors.type && <ErrorMessage>{errors.type.message}</ErrorMessage>}
           </RadioForm>
 
           <footer>
