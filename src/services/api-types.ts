@@ -17,6 +17,13 @@ export type CreateTransaction = {
   type: "expense" | "income"
 }
 
+export type TransactionFilter = {
+  title?: string
+  categoryId?: string
+  beginDate: string
+  endDate: string
+}
+
 export type Transaction = {
   _id: string
   title: string
@@ -24,4 +31,28 @@ export type Transaction = {
   date: Date
   type: "expense" | "income"
   category: Category
+}
+
+export type Balance = {
+  _id: string | null
+  incomes: number
+  expenses: number
+  balance: number
+}
+
+export type Expense = {
+  _id: string
+  title: string
+  amount: number
+  color: string
+}
+
+export type DashBoard = {
+  balance: Balance
+  expenses: Expense[]
+}
+
+export type DashboardFilters = {
+  beginDate: string
+  endDate: string
 }

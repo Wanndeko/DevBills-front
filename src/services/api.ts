@@ -4,7 +4,10 @@ import {
   Category,
   CreateCategories,
   CreateTransaction,
-  Transaction
+  DashBoard,
+  DashboardFilters,
+  Transaction,
+  TransactionFilter
 } from "./api-types"
 
 export class APIservice {
@@ -22,6 +25,42 @@ export class APIservice {
     return data
   }
 
+  static async getDashBoard({
+    beginDate,
+    endDate
+  }: DashboardFilters): Promise<DashBoard> {
+    const { data } = await APIservice.client.get<DashBoard>(
+      "/transactions/dashboard",
+      {
+        params: {
+          beginDate,
+          endDate
+        }
+      }
+    )
+
+    return data
+  }
+
+  static async getTransaction({
+    title,
+    categoryId,
+    beginDate,
+    endDate
+  }: TransactionFilter): Promise<Transaction[]> {
+    const { data } = await APIservice.client.get<Transaction[]>(
+      "/transactions",
+      {
+        params: {
+          ...(title?.length && { title }),
+          ...(categoryId?.length && { categoryId }),
+          beginDate,
+          endDate
+        }
+      }
+    )
+    return data
+  }
   static async createCategory(
     createCategoryData: CreateCategories
   ): Promise<Category> {
