@@ -6,6 +6,8 @@ import {
   CreateTransaction,
   DashBoard,
   DashboardFilters,
+  FinancialEvoluiton,
+  FinancialEvolutionFilters,
   Transaction,
   TransactionFilter
 } from "./api-types"
@@ -74,6 +76,20 @@ export class APIservice {
   static async getCategories(): Promise<Category[]> {
     const { data } = await APIservice.client.get<Category[]>("/categories")
 
+    return data
+  }
+
+  static async getFinancialEvolution({
+    year
+  }: FinancialEvolutionFilters): Promise<FinancialEvoluiton[]> {
+    const { data } = await APIservice.client.get<FinancialEvoluiton[]>(
+      "/transactions/financial-evolution",
+      {
+        params: {
+          year
+        }
+      }
+    )
     return data
   }
 }

@@ -3,49 +3,16 @@ import dayjs from "dayjs"
 import ptBRLocale from "dayjs/locale/pt-br"
 import { useMemo } from "react"
 
+import { FinancialEvoluiton } from "../../services/api-types"
 import { theme } from "../../styles/themes"
 import { formatCurrency } from "../../utils/format-currency"
 
 dayjs.locale(ptBRLocale)
 
-const apiData = [
-  {
-    _id: {
-      year: 2024,
-      month: 1
-    },
-    balance: 80597,
-    incomes: 90545,
-    expenses: 50814
-  },
-  {
-    _id: {
-      year: 2024,
-      month: 2
-    },
-    balance: 80597,
-    incomes: 90545,
-    expenses: 50814
-  },
-  {
-    _id: {
-      year: 2024,
-      month: 3
-    },
-    balance: 80597,
-    incomes: 90545,
-    expenses: 50814
-  },
-  {
-    _id: {
-      year: 2024,
-      month: 4
-    },
-    balance: 80597,
-    incomes: 90545,
-    expenses: 50814
-  }
-]
+type FinancialEvoluitonBarChartProps = {
+  financialEvolution?: FinancialEvoluiton[]
+}
+
 type ChartData = {
   month: string
   Saldo: number
@@ -53,16 +20,25 @@ type ChartData = {
   Gastos: number
 }
 
-export function FinancialEvolutionBarChart() {
+export function FinancialEvolutionBarChart({
+  financialEvolution
+}: FinancialEvoluitonBarChartProps) {
   const data = useMemo<ChartData[]>(() => {
-    const chartData: ChartData[] = apiData.map((item) => ({
-      month: dayjs(`${item._id.year}-${item._id.month}-01`).format("MMM"),
-      Saldo: item.balance,
-      Receitas: item.incomes,
-      Gastos: item.expenses
-    }))
-    return chartData
-  }, [])
+    if (financialEvolution?.length) {
+      const chartData: ChartData[] = financialEvolution.map((item) => {
+        const [year, month] = item._id
+
+        return {
+          month: dayjs(`${year}-${month}-01`).format("MMM"),
+          Saldo: item.balance,
+          Receitas: item.incomes,
+          Gastos: item.expenses
+        }
+      })
+      return chartData
+    }
+    return []
+  }, [financialEvolution])
 
   return (
     <ResponsiveBar

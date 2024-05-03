@@ -7,22 +7,32 @@ import {
 } from "react"
 
 import { APIservice } from "../services/api"
-import { Category, DashBoard, Transaction } from "../services/api-types"
+import {
+  Category,
+  DashBoard,
+  FinancialEvoluiton,
+  Transaction
+} from "../services/api-types"
 import { formatDate } from "../utils/formart-date"
 import {
   CreateCategoryData,
   CreateTransactionData,
+  FinancialEvolutionFilterData,
   TransctionFilterData
 } from "../validators/types"
 
 interface FetchAPIProps {
   dashboard: DashBoard
+  financialEvolution: FinancialEvoluiton[]
   createCategory: (data: CreateCategoryData) => Promise<void>
   createTransaction: (data: CreateTransactionData) => Promise<void>
   fetchCategories: () => Promise<void>
   fetchTransactions: (filters: TransctionFilterData) => Promise<void>
   fetchDashboard: (
     filters: Pick<TransctionFilterData, "beginDate" | "endDate">
+  ) => Promise<void>
+  fetchFinancialEvolution: (
+    filters: FinancialEvolutionFilterData
   ) => Promise<void>
   categories: Category[]
   transactions: Transaction[]
@@ -38,6 +48,9 @@ export function FetchAPIProvider({ children }: FetchAPIProviderProps) {
   const [dashboard, setDashboard] = useState<DashBoard>({} as DashBoard)
   const [categories, setCategories] = useState<Category[]>([])
   const [transactions, setTransactions] = useState<Transaction[]>([])
+  const [financialEvolution, setFinancialEvolution] = useState<
+    FinancialEvoluiton[]
+  >([])
   const createTransaction = useCallback(async (data: CreateTransactionData) => {
     await APIservice.createTransaction({
       ...data,
@@ -83,12 +96,24 @@ export function FetchAPIProvider({ children }: FetchAPIProviderProps) {
     []
   )
 
+  const fetchFinancialEvolution = useCallback(
+    async ({ year }: FinancialEvolutionFilterData) => {
+      const financialEvolution = await APIservice.getFinancialEvolution({
+        year: year.padStart(4, "0")
+      })
+      setFinancialEvolution(financialEvolution)
+    },
+    []
+  )
+
   return (
     <FetchAPIContext.Provider
       value={{
+        financialEvolution,
         categories,
         createCategory,
         fetchCategories,
+        fetchFinancialEvolution,
         createTransaction,
         transactions,
         fetchTransactions,

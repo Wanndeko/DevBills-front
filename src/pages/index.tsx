@@ -20,7 +20,10 @@ import { Titile } from "../components/title"
 import { Transaction } from "../components/transaction"
 import { useFetchAPI } from "../hooks/useFetchAPI"
 import { filterTransactionSchema } from "../validators/schema"
-import { TransctionFilterData } from "../validators/types"
+import {
+  FinancialEvolutionFilterData,
+  TransctionFilterData
+} from "../validators/types"
 import {
   Aside,
   Balance,
@@ -48,14 +51,27 @@ export function Home() {
     resolver: zodResolver(filterTransactionSchema)
   })
 
-  const { transactions, fetchTransactions, fetchDashboard, dashboard } =
-    useFetchAPI()
+  const financialEvolutionFilterForm = useForm<FinancialEvolutionFilterData>({
+    defaultValues: {
+      year: dayjs().get("year").toString()
+    }
+  })
+
+  const {
+    transactions,
+    fetchTransactions,
+    fetchDashboard,
+    fetchFinancialEvolution,
+    financialEvolution,
+    dashboard
+  } = useFetchAPI()
 
   useEffect(() => {
     const { beginDate, endDate } = transactionsFilterForm.getValues()
+    fetchFinancialEvolution(financialEvolutionFilterForm.getValues())
     fetchDashboard({ beginDate, endDate })
     fetchTransactions(transactionsFilterForm.getValues())
-  }, [fetchTransactions, transactionsFilterForm, fetchDashboard])
+  }, [fetchTransactions, transactionsFilterForm, fetchDashboard, fetchFinancialEvolution, financialEvolutionFilterForm])
 
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryProps | null>(null)
@@ -93,6 +109,13 @@ export function Home() {
       await fetchTransactions(data)
     },
     [fetchDashboard, fetchTransactions]
+  )
+
+  const onSubmitFinancialEvolution = useCallback(
+    async (data: FinancialEvolutionFilterData) => {
+      await fetchFinancialEvolution(data)
+    },
+    [fetchFinancialEvolution]
   )
 
   return (
@@ -186,16 +209,19 @@ export function Home() {
                   variant="black"
                   label="Inicio"
                   placeholder="aaaa"
+                  {...financialEvolutionFilterForm.register("year")}
                 />
                 <ButtonICon
-                  onClick={transactionsFilterForm.handleSubmit(
-                    onSubmitTransactions
+                  onClick={financialEvolutionFilterForm.handleSubmit(
+                    onSubmitFinancialEvolution
                   )}
                 />
               </ChartAction>
             </header>
             <ChartContent>
-              <FinancialEvolutionBarChart />
+              <FinancialEvolutionBarChart
+                financialEvolution={financialEvolution}
+              />
             </ChartContent>
           </ChartContainer>
         </Section>
